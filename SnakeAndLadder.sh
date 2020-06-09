@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/bin/bash -x
 
 #@Author: Amrut
-#Snake N Ladder Use Case 3
+#Snake N Ladder Use Case 4
 
 echo "******Welcome to SnakeNLadder Game******"
 
@@ -9,6 +9,8 @@ START_POSITION=0
 NO_PLAY=0
 SNAKE=1
 LADDER=2
+WINNING_POSITION=100
+FLAG=true
 
 player=1
 CurrentPosition=$START_POSITION
@@ -29,6 +31,21 @@ function rollDice() {
 				;;
 		esac
 }
+function winningPosition() {
 
-rollDice
+		while [ $FLAG ]
+		do
+			rollDice
+			if [ $CurrentPosition -eq $WINNING_POSITION ]
+			then
+					break
+			elif [ $CurrentPosition -lt $START_POSITION ]
+			then
+					CurrentPosition=0
+					echo "restart"
+			fi
+		done
+}
+
+winningPosition
 echo "Position of the player is :: $CurrentPosition"
