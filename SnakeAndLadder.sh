@@ -1,7 +1,7 @@
 #!/bin/bash 
 
 #@Author: Amrut
-#Snake N Ladder Use Case 5
+#Snake N Ladder Use Case 6
 
 echo "******Welcome to SnakeNLadder Game******"
 
@@ -14,6 +14,9 @@ FLAG=true
 
 player=1
 CurrentPosition=$START_POSITION
+numOfRolls=0
+
+declare -A positions
 
 function rollDice() {
 		checkDiceNum=$(( RANDOM % 6 + 1 ))
@@ -24,12 +27,16 @@ function rollDice() {
 				CurrentPosition=$(( CurrentPosition + $NO_PLAY ))
 				;;
 		$SNAKE)
-				CurrentPosition=$(( CurrentPosition - checkDiceNum ))
+				if [ $(( CurrentPosition-checkDiceNum )) -lt $START_POSITION ]
+				then
+					CurrentPosition=$START_POSITION
+				else
+					CurrentPosition=$(( CurrentPosition - checkDiceNum ))
+				fi
 				;;
 		$LADDER)
 				if [ $(( CurrentPosition+checkDiceNum )) -gt $WINNING_POSITION ]
 				then
-					echo "player position is above 100"
 					CurrentPosition=$(( CurrentPosition - checkDiceNum ))
 				else
 					CurrentPosition=$(( CurrentPosition + checkDiceNum ))
@@ -42,6 +49,9 @@ function winningPosition() {
 		while [ $FLAG ]
 		do
 			rollDice
+			(( numOfRolls++ ))
+			positions[ "RollNum $numOfRolls" ]=$CurrentPosition
+
 			if [ $CurrentPosition -eq $WINNING_POSITION ]
 			then
 					break
@@ -54,4 +64,6 @@ function winningPosition() {
 }
 
 winningPosition
+echo "${!positions[@]} : ${positions[@]}"
+echo "Total Dice Rolls to reach the winning position is : $numOfRolls"
 echo "**Player reaches to the winning position :: $CurrentPosition**"
