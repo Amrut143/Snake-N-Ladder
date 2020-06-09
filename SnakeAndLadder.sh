@@ -1,7 +1,7 @@
-#!/bin/bash -x
+#!/bin/bash 
 
 #@Author: Amrut
-#Snake N Ladder Use Case 4
+#Snake N Ladder Use Case 5
 
 echo "******Welcome to SnakeNLadder Game******"
 
@@ -16,7 +16,7 @@ player=1
 CurrentPosition=$START_POSITION
 
 function rollDice() {
-		checkDice=$(( RANDOM % 6 + 1 ))
+		checkDiceNum=$(( RANDOM % 6 + 1 ))
 		ranCheck=$(( RANDOM % 3 ))
 
 		case $ranCheck in
@@ -24,10 +24,16 @@ function rollDice() {
 				CurrentPosition=$(( CurrentPosition + $NO_PLAY ))
 				;;
 		$SNAKE)
-				CurrentPosition=$(( CurrentPosition - checkDice ))
+				CurrentPosition=$(( CurrentPosition - checkDiceNum ))
 				;;
 		$LADDER)
-				CurrentPosition=$(( CurrentPosition + checkDice ))
+				if [ $(( CurrentPosition+checkDiceNum )) -gt $WINNING_POSITION ]
+				then
+					echo "player position is above 100"
+					CurrentPosition=$(( CurrentPosition - checkDiceNum ))
+				else
+					CurrentPosition=$(( CurrentPosition + checkDiceNum ))
+				fi
 				;;
 		esac
 }
@@ -41,11 +47,11 @@ function winningPosition() {
 					break
 			elif [ $CurrentPosition -lt $START_POSITION ]
 			then
-					CurrentPosition=0
-					echo "restart"
+					echo "player position is below 0, restart game"
+					CurrentPosition=$START_POSITION
 			fi
 		done
 }
 
 winningPosition
-echo "Position of the player is :: $CurrentPosition"
+echo "**Player reaches to the winning position :: $CurrentPosition**"
